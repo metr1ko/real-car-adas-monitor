@@ -4,10 +4,8 @@ project(RealCarMonitor VERSION 1.0)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Явно указываем CMake, где лежит файл OpenCVConfig.cmake
-set(OpenCV_DIR "C:/opencv/x64/mingw/lib")
-
 # 1. Поиск OpenCV
+set(OpenCV_DIR "C:/opencv/x64/mingw/lib")
 find_package(OpenCV REQUIRED)
 
 # 2. Настройка путей для ONNX Runtime
@@ -15,9 +13,10 @@ set(ONNXRUNTIME_DIR "C:/onnxruntime")
 include_directories(${ONNXRUNTIME_DIR}/include)
 link_directories(${ONNXRUNTIME_DIR}/lib)
 
-# 3. Объявляем исходные файлы
+# 3. Объявляем исходные файлы для главного приложения
 set(SOURCES
     src/main.cpp
+    src/obd_parser.cpp
 )
 
 # 4. Объявляем исполняемый файл приложения
@@ -34,3 +33,7 @@ FetchContent_Declare(
 )
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
+
+# 6. Исполняемый файл для unit-тестов
+add_executable(RunTests tests/test_obd_parser.cpp src/obd_parser.cpp)
+target_link_libraries(RunTests gtest_main)
