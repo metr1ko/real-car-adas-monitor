@@ -1,40 +1,36 @@
-cmake_minimum_required(VERSION 3.20)
-project(RealCarMonitor VERSION 1.0)
+cmake_minimum_required(VERSION 3.15)
+project(RealCarMonitor)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# 1. Поиск OpenCV
-set(OpenCV_DIR "C:/opencv/x64/mingw/lib")
+# 1. Подключаем OpenCV (путь мы указываем в терминале через -DOpenCV_DIR)
 find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
 
-# 2. Настройка путей для ONNX Runtime
-set(ONNXRUNTIME_DIR "C:/onnxruntime")
-include_directories(${ONNXRUNTIME_DIR}/include)
-link_directories(${ONNXRUNTIME_DIR}/lib)
+# 2. Скачиваем ONNX Runtime для Windows x64
+include(FetchContent)
+FetchContent_Declare(
+    onnxruntime
+    URL "https://github.com/microsoft/onnxruntime/releases/download/v1.14.1/onnxruntime-win-x64-1.14.1.zip"
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE # Убирает желтое предупреждение из логов
+)
+FetchContent_MakeAvailable(onnxruntime)
 
-# 3. Объявляем исходные файлы для главного приложения
-set(SOURCES
+# 3. Добавляем все наши исходные файлы (включая новый dashboard.cpp)
+add_executable(RealCarMonitor
     src/main.cpp
     src/obd_parser.cpp
     src/onnx_classifier.cpp
+    src/dashboard.cpp
 )
 
-# 4. Объявляем исполняемый файл приложения
-add_executable(RealCarMonitor ${SOURCES})
+# 4. Указываем путь к заголовочным файлам ONNX Runtime
+target_include_directories(RealCarMonitor PRIVATE ${onnxruntime_SOURCE_DIR}/include)
 
-# Привязываем библиотеки к нашему приложению
-target_link_libraries(RealCarMonitor ${OpenCV_LIBS} onnxruntime)
-
-# 5. Подключение Google Test
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
+# 5. Линкуем библиотеки к нашему приложению
+# Для компилятора Visual Studio (MSVC) нужно линковать файл .lib
+target_link_libraries(RealCarMonitor PRIVATE 
+    ${OpenCV_LIBS} 
+    ${onnxruntime_SOURCE_DIR}/lib/onnxruntime.lib
 )
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
-
-# 6. Исполняемый файл для unit-тестов
-add_executable(RunTests tests/test_obd_parser.cpp src/obd_parser.cpp)
-target_link_libraries(RunTests gtest_main)

@@ -1,80 +1,35 @@
 #include <iostream>
-#include <vector>
-#include <iomanip>
-#include "obd_parser.h"
-#include "onnx_classifier.h"
+#include <opencv2/opencv.hpp>
+#include "dashboard.h"
 
 int main()
 {
-    std::cout << "========================================" << std::endl;
-    std::cout << "Real Car ADAS Monitor - Version 1.0" << std::endl;
-    std::cout << "========================================\n"
-              << std::endl;
+    std::cout << "Starting Dashboard Test..." << std::endl;
 
-    try
-    {
-        // 1. Загрузка данных
-        OBDParser parser;
-        int records_loaded = parser.load("../data/obd_data.csv"); // Путь из папки build
-        if (records_loaded < 0)
-        {
-            std::cerr << "Error: Failed to load dataset." << std::endl;
-            return -1;
-        }
+    // Создаем пустой кадр (имитация видео с камеры 1280x720)
+    cv::Mat frame = cv::Mat::zeros(720, 1280, CV_8UC3);
 
-        // 2. Инициализация классификатора
-        ONNXClassifier classifier("../models/driver_classifier.onnx",
-                                  "../models/normalization_params.json");
-        std::cout << "Classifier initialized successfully.\n"
-                  << std::endl;
+    // Немного "шума" на фон для реалистичности
+    cv::randu(frame, cv::Scalar(0, 0, 0), cv::Scalar(50, 50, 50));
 
-        // 3. Вывод таблицы для первых 20 записей
-        std::cout << "--- Classification Results (First 20 records) ---" << std::endl;
-        std::cout << std::left << std::setw(12) << "Record ID"
-                  << std::setw(15) << "True Label"
-                  << std::setw(15) << "Prediction"
-                  << std::setw(15) << "Confidence" << std::endl;
-        std::cout << std::string(55, '-') << std::endl;
+    Dashboard dashboard;
 
-        int correct_predictions = 0;
-        int num_to_test = std::min(20, records_loaded);
+    // Тестовые данные (создаем предупреждение по топливу и стилю)
+    TelemetryData test_data;
+    test_data.speed_kmh = 105.5f;   // Спидометр: красная зона
+    test_data.engine_rpm = 3200.0f; // Тахометр: зеленая зона
+    test_data.coolant_temp = 90.0f; // Температура: норма
+    test_data.fuel_level = 10.0f;   // Топливо: меньше 15% - триггер Warning!
+    test_data.throttle_pos = 45.0f; // Дроссель: норма
+    test_data.style_label = 2;      // Стиль: AGGRESSIVE
 
-        for (int i = 0; i < num_to_test; ++i)
-        {
-            auto record = parser.getRecord(i);
+    // Отрисовываем панель поверх кадра
+    dashboard.draw(frame, test_data);
 
-            std::vector<float> features = {
-                record.speed_kmh,
-                record.engine_rpm,
-                record.throttle_pos,
-                record.coolant_temp,
-                record.fuel_level,
-                record.intake_air_temp};
-
-            ClassificationResult result = classifier.classify(features);
-
-            if (result.label == record.label)
-            {
-                correct_predictions++;
-            }
-
-            std::cout << std::left << std::setw(12) << (i + 1)
-                      << std::setw(15) << record.label
-                      << std::setw(15) << result.label
-                      << std::fixed << std::setprecision(2) << (result.confidence * 100.0f) << "%" << std::endl;
-        }
-
-        std::cout << std::string(55, '-') << std::endl;
-
-        // 4. Подсчет точности
-        float accuracy = (static_cast<float>(correct_predictions) / num_to_test) * 100.0f;
-        std::cout << "Accuracy for first " << num_to_test << " records: " << accuracy << "%" << std::endl;
-    }
-    catch (const std::exception &e)
-    {
-        std::cerr << "Critical Error: " << e.what() << std::endl;
-        return -1;
-    }
+    // Вывод на экран
+    cv::imshow("Real Car Monitor - Dashboard Test", frame);
+    std::cout << "Press any key on the image window to close..." << std::endl;
+    cv::waitKey(0);
 
     return 0;
 }
