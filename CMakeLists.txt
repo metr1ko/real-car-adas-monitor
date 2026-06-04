@@ -17,6 +17,7 @@ link_directories(${ONNXRUNTIME_DIR}/lib)
 set(SOURCES
     src/main.cpp
     src/obd_parser.cpp
+    src/onnx_classifier.cpp
 )
 
 # 4. Объявляем исполняемый файл приложения
