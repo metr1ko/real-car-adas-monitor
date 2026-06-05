@@ -1,35 +1,57 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
-#include "dashboard.h"
+#include "dms_monitor.h"
+#include "dms_hud.h"
 
 int main()
 {
-    std::cout << "Starting Dashboard Test..." << std::endl;
+    std::cout << "Starting DMS Test..." << std::endl;
 
-    // Создаем пустой кадр (имитация видео с камеры 1280x720)
-    cv::Mat frame = cv::Mat::zeros(720, 1280, CV_8UC3);
+    // Пути к моделям
+    std::string face_proto = "D:/study/mag/proging/real-car-adas-monitor/models/deploy.prototxt";
+    std::string face_model = "D:/study/mag/proging/real-car-adas-monitor/models/res10_300x300_ssd_iter_140000.caffemodel";
+    std::string eye_cascade = "D:/study/mag/proging/real-car-adas-monitor/models/haarcascade_eye.xml";
 
-    // Немного "шума" на фон для реалистичности
-    cv::randu(frame, cv::Scalar(0, 0, 0), cv::Scalar(50, 50, 50));
+    DMSMonitor dms(face_proto, face_model, eye_cascade);
+    DMSHUD hud;
 
-    Dashboard dashboard;
+    // Открываем веб-камеру
+    cv::VideoCapture cap(0);
+    if (!cap.isOpened())
+    {
+        std::cerr << "Error: Could not open web camera!" << std::endl;
+        return -1;
+    }
 
-    // Тестовые данные (создаем предупреждение по топливу и стилю)
-    TelemetryData test_data;
-    test_data.speed_kmh = 105.5f;   // Спидометр: красная зона
-    test_data.engine_rpm = 3200.0f; // Тахометр: зеленая зона
-    test_data.coolant_temp = 90.0f; // Температура: норма
-    test_data.fuel_level = 10.0f;   // Топливо: меньше 15% - триггер Warning!
-    test_data.throttle_pos = 45.0f; // Дроссель: норма
-    test_data.style_label = 2;      // Стиль: AGGRESSIVE
+    cv::Mat cam_frame;
+    cv::Mat main_frame = cv::Mat::zeros(720, 1280, CV_8UC3); // Главный черный фон 1280x720
 
-    // Отрисовываем панель поверх кадра
-    dashboard.draw(frame, test_data);
+    std::cout << "Press 'q' or ESC to exit." << std::endl;
 
-    // Вывод на экран
-    cv::imshow("Real Car Monitor - Dashboard Test", frame);
-    std::cout << "Press any key on the image window to close..." << std::endl;
-    cv::waitKey(0);
+    while (true)
+    {
+        cap >> cam_frame;
+        if (cam_frame.empty())
+            break;
 
+        // 1. Анализируем кадр
+        DriverState state = dms.analyze(cam_frame);
+
+        // 2. Очищаем главный фон (оставляем левую половину черной)
+        main_frame.setTo(cv::Scalar(0, 0, 0));
+
+        // 3. Рисуем интерфейс DMS на правой половине
+        hud.draw(main_frame, cam_frame, state);
+
+        // 4. Показываем результат
+        cv::imshow("Real Car Monitor - DMS Test", main_frame);
+
+        char key = (char)cv::waitKey(30);
+        if (key == 27 || key == 'q' || key == 'Q')
+            break; // ESC или 'q' для выхода
+    }
+
+    cap.release();
+    cv::destroyAllWindows();
     return 0;
 }

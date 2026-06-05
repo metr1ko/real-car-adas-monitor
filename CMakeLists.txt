@@ -23,6 +23,8 @@ add_executable(RealCarMonitor
     src/obd_parser.cpp
     src/onnx_classifier.cpp
     src/dashboard.cpp
+    src/dms_monitor.cpp 
+    src/dms_hud.cpp
 )
 
 # 4. Указываем путь к заголовочным файлам ONNX Runtime
