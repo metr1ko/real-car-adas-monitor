@@ -53,7 +53,7 @@ void Dashboard::draw(cv::Mat &frame, const TelemetryData &data)
     }
     cv::putText(frame, style_text, cv::Point(40, 440), cv::FONT_HERSHEY_SIMPLEX, 0.8, style_color, 2);
 
-    // 5. Предупреждения (Warnings)
+    // 5. Предупреждения
     if (coolant_warn || fuel_warn)
     {
         std::string warn_msg = "WARNING: ";

@@ -1,3 +1,7 @@
+/**
+ * @file onnx_classifier.h
+ * @brief Модуль ИИ для классификации стиля вождения с использованием ONNX Runtime.
+ */
 #ifndef ONNX_CLASSIFIER_H
 #define ONNX_CLASSIFIER_H
 
@@ -5,32 +9,42 @@
 #include <vector>
 #include <onnxruntime_cxx_api.h>
 
-// Структура для возврата результатов инференса
+/**
+ * @struct ClassificationResult
+ * @brief Результат работы нейросети.
+ */
 struct ClassificationResult
 {
-    int label;                 // 0 (SLOW), 1 (NORMAL), 2 (AGGRESSIVE)
-    float confidence;          // Уверенность (от 0.0 до 1.0)
-    std::vector<float> scores; // Вероятности для каждого из 3 классов
+    int label;        /**< Метка класса: 0=SLOW, 1=NORMAL, 2=AGGRESSIVE */
+    float confidence; /**< Уверенность сети в предсказании (0.0 - 1.0) */
 };
 
+/**
+ * @class ONNXClassifier
+ * @brief Класс для загрузки ONNX модели и выполнения инференса.
+ */
 class ONNXClassifier
 {
 public:
-    // Загружает модель и параметры нормализации
-    ONNXClassifier(const std::string &model_path, const std::string &json_path);
+    /**
+     * @brief Конструктор инициализирует модель и параметры нормализации.
+     * @param model_path Путь к файлу .onnx.
+     * @param norm_params_path Путь к JSON файлу с параметрами нормализации.
+     */
+    ONNXClassifier(const std::string &model_path, const std::string &norm_params_path);
 
-    // Метод классификации массива признаков
+    /**
+     * @brief Классифицирует текущие данные телеметрии.
+     * @param features Вектор признаков (скорость, обороты и т.д.).
+     * @return Результат классификации (класс и уверенность).
+     */
     ClassificationResult classify(const std::vector<float> &features);
 
 private:
     Ort::Env env;
     Ort::Session session{nullptr};
-
-    std::vector<float> mean_;
-    std::vector<float> std_;
-
-    // Внутренний метод для чтения JSON без сторонних библиотек
-    void parseNormalizationParams(const std::string &json_path);
+    std::vector<float> means;
+    std::vector<float> scales;
 };
 
 #endif // ONNX_CLASSIFIER_H

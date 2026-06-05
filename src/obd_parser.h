@@ -1,36 +1,55 @@
-#pragma once
+/**
+ * @file obd_parser.h
+ * @brief Модуль чтения и парсинга данных телеметрии автомобиля (OBD-II).
+ */
+#ifndef OBD_PARSER_H
+#define OBD_PARSER_H
+
 #include <string>
 #include <vector>
-#include <stdexcept>
 
-// Структура, хранящая одну запись телеметрии
+/**
+ * @struct OBDRecord
+ * @brief Структура для хранения одной записи телеметрии.
+ */
 struct OBDRecord
 {
-    float speed_kmh;
-    float engine_rpm;
-    float throttle_pos;
-    float coolant_temp;
-    float fuel_level;
-    float intake_air_temp;
-    int label; // SLOW=0, NORMAL=1, AGGRESSIVE=2
+    float speed_kmh;       /**< Скорость (км/ч) */
+    float engine_rpm;      /**< Обороты двигателя (об/мин) */
+    float throttle_pos;    /**< Положение дроссельной заслонки (%) */
+    float coolant_temp;    /**< Температура охлаждающей жидкости (C) */
+    float fuel_level;      /**< Уровень топлива (%) */
+    float intake_air_temp; /**< Температура впускаемого воздуха (C) */
 };
 
-// Класс парсера
+/**
+ * @class OBDParser
+ * @brief Класс для загрузки и выдачи записей телеметрии из CSV файла.
+ */
 class OBDParser
 {
-private:
-    std::vector<OBDRecord> records;
-
 public:
-    // Конвертация строки в число
-    static int stringToLabel(const std::string &str);
+    /**
+     * @brief Загружает данные из CSV файла.
+     * @param filepath Путь к файлу CSV.
+     */
+    void load(const std::string &filepath);
 
-    // Загрузка данных из CSV файла, возвращает кол-во записей или -1 при ошибке
-    int load(const std::string &filename);
-
-    // Получение записи по индексу (бросает std::out_of_range)
+    /**
+     * @brief Получает запись по индексу.
+     * @param index Номер строки (начиная с 0).
+     * @return Запись телеметрии OBDRecord.
+     */
     OBDRecord getRecord(int index) const;
 
-    // Получить общее количество загруженных записей
+    /**
+     * @brief Возвращает общее количество загруженных записей.
+     * @return Количество строк данных.
+     */
     int getRecordsCount() const;
+
+private:
+    std::vector<OBDRecord> data;
 };
+
+#endif // OBD_PARSER_H

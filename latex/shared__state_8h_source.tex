@@ -1,0 +1,29 @@
+\doxysection{shared\+\_\+state.\+h}
+\hypertarget{shared__state_8h_source}{}\label{shared__state_8h_source}\index{src/shared\_state.h@{src/shared\_state.h}}
+\doxymbox{\hyperlink{shared__state_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ SHARED\_STATE\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ SHARED\_STATE\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{obd__parser_8h}{obd\_parser.h}}"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_shared_state}{SharedState}}}
+\DoxyCodeLine{00017\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ \doxymbox{\hyperlink{struct_o_b_d_record}{OBDRecord}}\ \doxymbox{\hyperlink{struct_shared_state_afb204e08db2a4ee0548b44444e4bd43c}{current\_obd}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_shared_state_a6e06dbe5ba40851d1b6d712cf532f4ae}{current\_style\_label}}\ =\ 1;\ }
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_shared_state_a605875fa066a3df8c775368f2a989023}{drowsy\_alerts}}\ =\ 0;\ \ \ \ \ }
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_shared_state_acadaaefd20058b19562794cee228673f}{distracted\_alerts}}\ =\ 0;\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_shared_state_a7674bdfb6dc3ab95d82be0ef5558f274}{aggressive\_alerts}}\ =\ 0;\ }
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_shared_state_aba56a6e00e9523ca791326bd9a7750ac}{total\_obd\_records}}\ =\ 0;\ }
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ std::atomic<bool>\ \doxymbox{\hyperlink{struct_shared_state_a4b35795e7152b4a932bdd6a3090840f0}{running}}\{\textcolor{keyword}{true}\};\ }
+\DoxyCodeLine{00027\ \ \ \ \ std::mutex\ \doxymbox{\hyperlink{struct_shared_state_a5cae91298dde2facf1e9a3a5acaf808c}{mtx}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00028\ \};}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SHARED\_STATE\_H}}
+
+\end{DoxyCode}

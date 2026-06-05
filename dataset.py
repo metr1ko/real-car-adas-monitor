@@ -2,40 +2,88 @@ import csv
 import random
 import os
 
+# Функция для добавления небольшого "шума" (чтобы стрелки чуть-чуть дрожали, как в реальной жизни)
+def noise(val, amount):
+    return val + random.uniform(-amount, amount)
 
-def generate_data(filename, num_records=5000):
-    os.makedirs(os.path.dirname(filename), exist_ok=True)
+rows = []
+speed = 0.0
+rpm = 800.0
+throttle = 0.0
+coolant = 85.0
+fuel = 50.0
 
-    with open(filename, mode='w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(['speed_kmh', 'engine_rpm', 'throttle_pos',
-                        'coolant_temp', 'fuel_level', 'intake_air_temp', 'label'])
+print("Generating realistic driving data...")
 
-        for _ in range(num_records):
-            label = random.choices(
-                ['SLOW', 'NORMAL', 'AGGRESSIVE'], weights=[0.2, 0.6, 0.2])[0]
+for i in range(600):
+    t = i / 10.0 # Время в секундах (1 шаг = 100 мс)
 
-            if label == 'SLOW':
-                speed = round(random.uniform(0, 40), 1)
-                rpm = round(random.uniform(800, 2000), 1)
-                throttle = round(random.uniform(0, 20), 1)
-            elif label == 'NORMAL':
-                speed = round(random.uniform(40, 90), 1)
-                rpm = round(random.uniform(1500, 3000), 1)
-                throttle = round(random.uniform(15, 40), 1)
-            else:  # AGGRESSIVE
-                speed = round(random.uniform(80, 160), 1)
-                rpm = round(random.uniform(3000, 6000), 1)
-                throttle = round(random.uniform(50, 100), 1)
+    if t < 5.0:
+        # Стоим
+        target_speed, target_throttle, target_rpm = 0, 0, 800
+        label = "SLOW"
+    elif t < 20.0:
+        # Плавный разгон до 60
+        target_speed = 60 * ((t - 5) / 15.0)
+        target_throttle = 35
+        gear_ratio = 1.0 if target_speed < 20 else (0.6 if target_speed < 40 else 0.4)
+        target_rpm = 1200 + target_speed * 60 * gear_ratio
+        label = "NORMAL"
+    elif t < 35.0:
+        # Круиз 60 км/ч
+        target_speed, target_throttle = 60, 15
+        target_rpm = 2200
+        label = "NORMAL"
+    elif t < 45.0:
+        # Агрессивный разгон (педаль в пол)
+        target_speed = 60 + 60 * ((t - 35) / 10.0)
+        target_throttle = 100
+        # Обороты сильно выше, уверенно заходят в красную зону (от 3500 до 5900)
+        target_rpm = 3500 + (target_speed - 60) * 40
+        label = "AGGRESSIVE"
+    elif t < 55.0:
+        # Торможение
+        target_speed = 120 * (1.0 - (t - 45) / 10.0)
+        target_throttle = 0
+        target_rpm = max(800, target_speed * 20)
+        label = "NORMAL"
+    else:
+        # Стоим
+        target_speed, target_throttle, target_rpm = 0, 0, 800
+        label = "SLOW"
 
-            coolant = round(random.uniform(70, 105), 1)
-            fuel = round(random.uniform(5, 100), 1)
-            intake = round(random.uniform(10, 50), 1)
+    # Плавное приближение текущих значений к целевым (эффект инерции машины)
+    speed += (target_speed - speed) * 0.2
+    rpm += (target_rpm - rpm) * 0.3
+    throttle += (target_throttle - throttle) * 0.3
 
-            writer.writerow(
-                [speed, rpm, throttle, coolant, fuel, intake, label])
+    # Медленные изменения
+    if coolant < 95: coolant += 0.01 
+    fuel -= 0.001
+    intake = noise(35, 1.0)
 
+    # Записываем строку с добавлением микро-шума и меткой (label)
+    rows.append([
+        round(max(0, noise(speed, 0.5)), 2),
+        round(max(800, noise(rpm, 20)), 2),
+        round(max(0, min(100, noise(throttle, 1.0))), 2),
+        round(coolant, 2),
+        round(fuel, 2),
+        round(intake, 2),
+        label
+    ])
 
-if __name__ == '__main__':
-    generate_data('data/obd_data.csv')
-    print("Файл успешно сгенерирован")
+# Определяем абсолютный путь к папке data рядом со скриптом
+script_dir = os.path.dirname(os.path.abspath(__file__))
+data_dir = os.path.join(script_dir, 'data')
+os.makedirs(data_dir, exist_ok=True)
+
+file_path = os.path.join(data_dir, 'obd_data.csv')
+
+# Сохраняем поверх старого файла
+with open(file_path, 'w', newline='') as f:
+    writer = csv.writer(f)
+    writer.writerow(['speed_kmh', 'engine_rpm', 'throttle_pos', 'coolant_temp', 'fuel_level', 'intake_air_temp', 'label'])
+    writer.writerows(rows)
+
+print(f"File {file_path} generated successfully!")

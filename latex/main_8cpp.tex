@@ -1,0 +1,56 @@
+\doxysection{src/\+main.cpp File Reference}
+\hypertarget{main_8cpp}{}\label{main_8cpp}\index{src/main.cpp@{src/main.cpp}}
+
+
+Главный файл многопоточной ADAS системы.  
+
+
+{\ttfamily \+\#include $<$iostream$>$}\newline
+{\ttfamily \+\#include $<$thread$>$}\newline
+{\ttfamily \+\#include $<$chrono$>$}\newline
+{\ttfamily \+\#include $<$fstream$>$}\newline
+{\ttfamily \+\#include $<$filesystem$>$}\newline
+{\ttfamily \+\#include $<$opencv2/\+opencv.\+hpp$>$}\newline
+{\ttfamily \+\#include "{}obd\+\_\+parser.\+h"{}}\newline
+{\ttfamily \+\#include "{}onnx\+\_\+classifier.\+h"{}}\newline
+{\ttfamily \+\#include "{}dashboard.\+h"{}}\newline
+{\ttfamily \+\#include "{}dms\+\_\+monitor.\+h"{}}\newline
+{\ttfamily \+\#include "{}dms\+\_\+hud.\+h"{}}\newline
+{\ttfamily \+\#include "{}shared\+\_\+state.\+h"{}}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{main_8cpp_a69244fd6997d8e895f3310237d1a1f9a}{obd\+\_\+thread\+\_\+func}} (\doxymbox{\hyperlink{struct_shared_state}{Shared\+State}} \&state, \doxymbox{\hyperlink{class_o_b_d_parser}{OBDParser}} \&parser, \doxymbox{\hyperlink{class_o_n_n_x_classifier}{ONNXClassifier}} \&classifier)
+\begin{DoxyCompactList}\small\item\em Функция потока OBD. Считывает данные и классифицирует стиль вождения с частотой 10 Гц. \end{DoxyCompactList}\item 
+\Hypertarget{main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}\label{main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4} 
+int {\bfseries main} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Главный файл многопоточной ADAS системы. 
+
+
+
+\label{main_8cpp_doc-func-members}
+\Hypertarget{main_8cpp_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{main_8cpp_a69244fd6997d8e895f3310237d1a1f9a}\index{main.cpp@{main.cpp}!obd\_thread\_func@{obd\_thread\_func}}
+\index{obd\_thread\_func@{obd\_thread\_func}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{obd\_thread\_func()}{obd\_thread\_func()}}
+{\footnotesize\ttfamily \label{main_8cpp_a69244fd6997d8e895f3310237d1a1f9a} 
+void obd\+\_\+thread\+\_\+func (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_shared_state}{Shared\+State}} \&}]{state}{, }\item[{\doxymbox{\hyperlink{class_o_b_d_parser}{OBDParser}} \&}]{parser}{, }\item[{\doxymbox{\hyperlink{class_o_n_n_x_classifier}{ONNXClassifier}} \&}]{classifier}{}\end{DoxyParamCaption})}
+
+
+
+Функция потока OBD. Считывает данные и классифицирует стиль вождения с частотой 10 Гц. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em state} & Ссылка на общий ресурс (\doxylink{struct_shared_state}{Shared\+State}). \\
+\hline
+{\em parser} & Ссылка на парсер телеметрии. \\
+\hline
+{\em classifier} & Ссылка на ONNX классификатор. \\
+\hline
+\end{DoxyParams}

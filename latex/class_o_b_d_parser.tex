@@ -1,0 +1,80 @@
+\doxysection{OBDParser Class Reference}
+\hypertarget{class_o_b_d_parser}{}\label{class_o_b_d_parser}\index{OBDParser@{OBDParser}}
+
+
+Класс для загрузки и выдачи записей телеметрии из CSV файла.  
+
+
+
+
+{\ttfamily \+\#include $<$obd\+\_\+parser.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{class_o_b_d_parser_a1d5673b9d423d22363352d1fb82b0dab}{load}} (const std::\+string \&filepath)
+\begin{DoxyCompactList}\small\item\em Загружает данные из CSV файла. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{struct_o_b_d_record}{OBDRecord}} \doxymbox{\hyperlink{class_o_b_d_parser_a108ace9ceb1fe2dde22f3bd70b85bccd}{get\+Record}} (int index) const
+\begin{DoxyCompactList}\small\item\em Получает запись по индексу. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{class_o_b_d_parser_a50ade6e6b7bf607ec5b45823fd9bad35}{get\+Records\+Count}} () const
+\begin{DoxyCompactList}\small\item\em Возвращает общее количество загруженных записей. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Класс для загрузки и выдачи записей телеметрии из CSV файла. 
+
+\label{class_o_b_d_parser_doc-func-members}
+\Hypertarget{class_o_b_d_parser_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_o_b_d_parser_a108ace9ceb1fe2dde22f3bd70b85bccd}\index{OBDParser@{OBDParser}!getRecord@{getRecord}}
+\index{getRecord@{getRecord}!OBDParser@{OBDParser}}
+\doxysubsubsection{\texorpdfstring{getRecord()}{getRecord()}}
+{\footnotesize\ttfamily \label{class_o_b_d_parser_a108ace9ceb1fe2dde22f3bd70b85bccd} 
+\doxymbox{\hyperlink{struct_o_b_d_record}{OBDRecord}} OBDParser::\+get\+Record (\begin{DoxyParamCaption}\item[{int}]{index}{}\end{DoxyParamCaption}) const}
+
+
+
+Получает запись по индексу. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & Номер строки (начиная с 0). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Запись телеметрии \doxylink{struct_o_b_d_record}{OBDRecord}. 
+\end{DoxyReturn}
+\Hypertarget{class_o_b_d_parser_a50ade6e6b7bf607ec5b45823fd9bad35}\index{OBDParser@{OBDParser}!getRecordsCount@{getRecordsCount}}
+\index{getRecordsCount@{getRecordsCount}!OBDParser@{OBDParser}}
+\doxysubsubsection{\texorpdfstring{getRecordsCount()}{getRecordsCount()}}
+{\footnotesize\ttfamily \label{class_o_b_d_parser_a50ade6e6b7bf607ec5b45823fd9bad35} 
+int OBDParser::\+get\+Records\+Count (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Возвращает общее количество загруженных записей. 
+
+\begin{DoxyReturn}{Returns}
+Количество строк данных. 
+\end{DoxyReturn}
+\Hypertarget{class_o_b_d_parser_a1d5673b9d423d22363352d1fb82b0dab}\index{OBDParser@{OBDParser}!load@{load}}
+\index{load@{load}!OBDParser@{OBDParser}}
+\doxysubsubsection{\texorpdfstring{load()}{load()}}
+{\footnotesize\ttfamily \label{class_o_b_d_parser_a1d5673b9d423d22363352d1fb82b0dab} 
+int OBDParser::\+load (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{filepath}{}\end{DoxyParamCaption})}
+
+
+
+Загружает данные из CSV файла. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em filepath} & Путь к файлу CSV. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+src/\+\doxymbox{\hyperlink{obd__parser_8h}{obd\+\_\+parser.\+h}}\item 
+src/\+obd\+\_\+parser.\+cpp\end{DoxyCompactItemize}

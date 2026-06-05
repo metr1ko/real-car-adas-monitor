@@ -29,8 +29,6 @@ DriverState DMSMonitor::analyze(const cv::Mat &frame)
         state.looking_forward = (std::abs(state.head_turn_deg) < 20.0f); // Порог в 20 градусов
 
         // 3. Открытость глаз
-        // Если человек отвернулся, алгоритм Хаара все равно не найдет глаза (сбоку он их не видит).
-        // Поэтому ищем глаза, только если водитель смотрит прямо.
         if (state.looking_forward)
         {
             state.eye_openness = estimateEyeOpenness(frame, state.face_rect);
@@ -38,8 +36,7 @@ DriverState DMSMonitor::analyze(const cv::Mat &frame)
         }
         else
         {
-            // Если отвернулся, считаем глаза условно открытыми,
-            // чтобы не копилась ложная статистика усталости.
+
             state.eyes_open = true;
         }
     }
@@ -121,7 +118,6 @@ float DMSMonitor::estimateEyeOpenness(const cv::Mat &frame, const cv::Rect &face
     std::vector<cv::Rect> eyes;
     eye_classifier.detectMultiScale(gray, eyes, 1.1, 3, 0, cv::Size(20, 20));
 
-    // Если найден хотя бы один глаз, считаем открытыми (упрощенно 1.0)
     return (eyes.size() > 0) ? 1.0f : 0.0f;
 }
 
@@ -133,6 +129,5 @@ float DMSMonitor::estimateHeadTurn(const cv::Rect &face_rect, int frame_width)
     // Смещение от центра (-1 до 1)
     float offset = (face_center_x - frame_center_x) / frame_center_x;
 
-    // Приблизительный перевод в градусы (допустим, максимум 90 градусов)
     return offset * 90.0f;
 }

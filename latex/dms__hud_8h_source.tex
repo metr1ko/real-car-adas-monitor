@@ -1,0 +1,22 @@
+\doxysection{dms\+\_\+hud.\+h}
+\hypertarget{dms__hud_8h_source}{}\label{dms__hud_8h_source}\index{src/dms\_hud.h@{src/dms\_hud.h}}
+\doxymbox{\hyperlink{dms__hud_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ DMS\_HUD\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ DMS\_HUD\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <opencv2/opencv.hpp>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{dms__monitor_8h}{dms\_monitor.h}}"{}}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_d_m_s_h_u_d}{DMSHUD}}\ \{}
+\DoxyCodeLine{00016\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_d_m_s_h_u_d_a95e8d97150195c71db82572e1bf82d9c}{draw}}(cv::Mat\&\ main\_frame,\ \textcolor{keyword}{const}\ cv::Mat\&\ cam\_frame,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_driver_state}{DriverState}}\&\ state);}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{void}\ drawCorners(cv::Mat\&\ frame,\ \textcolor{keyword}{const}\ cv::Rect\&\ rect,\ \textcolor{keyword}{const}\ cv::Scalar\&\ color);}
+\DoxyCodeLine{00033\ \};}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ DMS\_HUD\_H}}
+
+\end{DoxyCode}

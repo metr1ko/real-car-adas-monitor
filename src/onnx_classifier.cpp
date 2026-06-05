@@ -17,7 +17,6 @@ ONNXClassifier::ONNXClassifier(const std::string &model_path, const std::string 
     Ort::SessionOptions session_options;
     session_options.SetIntraOpNumThreads(1);
 
-    // Обработка путей для Windows (нужен std::wstring)
 #ifdef _WIN32
     std::wstring w_model_path(model_path.begin(), model_path.end());
     try
@@ -110,7 +109,6 @@ ClassificationResult ONNXClassifier::classify(const std::vector<float> &features
         memory_info, normalized_features.data(), normalized_features.size(),
         input_shape.data(), input_shape.size());
 
-    // Имена строго соответствуют тем, что были при экспорте модели в Python
     const char *input_names[] = {"features"};
     const char *output_names[] = {"class_scores"};
 
